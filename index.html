@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Avaii Resto-Cafe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0C0C0A;
+    --dark: #131310;
+    --card: #1A1A16;
+    --card2: #222219;
+    --green: #6B7C4E;
+    --green-light: #8A9D63;
+    --green-dim: rgba(107,124,78,0.15);
+    --gold: #C9A460;
+    --gold-dim: rgba(201,164,96,0.12);
+    --white: #F2EEE6;
+    --white-dim: rgba(242,238,230,0.6);
+    --white-faint: rgba(242,238,230,0.08);
+    --border: rgba(242,238,230,0.07);
+    --border-green: rgba(107,124,78,0.3);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 2px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 48px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(12,12,10,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-box {
+    width: 42px;
+    height: 42px;
+    background: #fff;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #666;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-wordmark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .nav-wordmark span:first-child {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-wordmark span:last-child {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--green-light);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--white-dim);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--green-light); }
+
+  .nav-reserve-btn {
+    background: var(--green);
+    color: var(--white) !important;
+    padding: 9px 20px !important;
+    border-radius: 2px;
+    letter-spacing: 0.12em !important;
+  }
+
+  .nav-reserve-btn:hover { background: var(--green-light) !important; color: var(--white) !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0; bottom: 0;
+    background: rgba(12,12,10,0.97);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    text-decoration: none;
+    color: var(--white-dim);
+    font-size: 28px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .mobile-menu a:hover { color: var(--green-light); }
+
+  .mobile-menu a.reserve-mobile {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    border: 1px solid var(--green);
+    padding: 12px 32px;
+    border-radius: 2px;
+    margin-top: 8px;
+  }
+
+  /* ─── PAGES ─── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ══════════════════════════════════
+     HOME PAGE
+  ══════════════════════════════════ */
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    min-height: 600px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 80px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: #1c1c18;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #444;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero-bg video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(12,12,10,0.95) 0%, rgba(12,12,10,0.4) 50%, rgba(12,12,10,0.2) 100%);
+    z-index: 1;
+  }
+
+  .hero-overlay-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .hero-overlay-lines::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 1px;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--green));
+    opacity: 0.3;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    padding: 0 72px;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--green-light);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 9vw, 108px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    color: var(--white-dim);
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    max-width: 420px;
+    margin-bottom: 40px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--white);
+    border: none;
+    padding: 14px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--green-light); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white-dim);
+    border: 1px solid var(--border-green);
+    padding: 13px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-outline:hover { border-color: var(--green-light); color: var(--green-light); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    right: 72px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-scroll span {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    writing-mode: vertical-lr;
+  }
+
+  .hero-scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--green-light), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* INFO STRIP */
+  .info-strip {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 72px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .info-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--green-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .info-item-text { line-height: 1.3; }
+  .info-item-text .label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green-light);
+  }
+  .info-item-text .value {
+    font-size: 13px;
+    color: var(--white-dim);
+  }
+
+  /* SECTIONS */
+  section { padding: 96px 72px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--green-light);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .section-subtitle {
+    font-size: 15px;
+    color: var(--white-dim);
+    line-height: 1.7;
+    max-width: 500px;
+  }
+
+  /* ABOUT SECTION */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 64px;
+  }
+
+  .about-image-stack {
+    position: relative;
+    height: 480px;
+  }
+
+  .about-img-main {
+    position: absolute;
+    top: 0; left: 0;
+    width: 75%;
+    height: 85%;
+    background: #2a2a24;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .about-img-accent {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 55%;
+    height: 52%;
+    background: var(--card2);
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .about-img-main img,
+  .about-img-accent img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about-img-accent img { object-position: center top; }
+
+  .about-img-badge {
+    position: absolute;
+    top: 32px;
+    right: 16px;
+    background: var(--green);
+    color: var(--white);
+    padding: 16px;
+    border-radius: 2px;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .about-img-badge .badge-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    display: block;
+    line-height: 1;
+  }
+
+  .about-img-badge .badge-text {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .about-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .about-feature {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .about-feature:hover { border-color: var(--border-green); }
+
+  .about-feature-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .about-feature h4 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .about-feature p {
+    font-size: 12px;
+    color: var(--white-dim);
+    line-height: 1.5;
+  }
+
+  /* HIGHLIGHTS */
+  .highlights {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 56px;
+  }
+
+  .highlight-card {
+    background: var(--card);
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.3s;
+  }
+
+  .highlight-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .highlight-card:hover::before { transform: scaleX(1); }
+  .highlight-card:hover { background: var(--card2); }
+
+  .highlight-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: var(--white-faint);
+    position: absolute;
+    top: 16px; right: 24px;
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+
+  .highlight-card:hover .highlight-num { color: var(--green-dim); }
+
+  .highlight-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+
+  .highlight-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  .highlight-card p {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.6;
+  }
+
+  /* MENU PREVIEW */
+  .menu-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 56px;
+  }
+
+  .menu-preview-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .menu-preview-card:hover {
+    border-color: var(--border-green);
+    transform: translateY(-3px);
+  }
+
+  .menu-preview-img {
+    height: 160px;
+    background: #252520;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .menu-preview-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(to top, var(--card), transparent);
+  }
+
+  .menu-preview-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .menu-preview-body { padding: 16px; }
+
+  .menu-preview-category {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 4px;
+  }
+
+  .menu-preview-body h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .menu-preview-price {
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .view-all-wrap {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  /* LOCATION */
+  .location-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+    margin-top: 56px;
+  }
+
+  .location-map-placeholder {
+    height: 360px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    flex-direction: column;
+    gap: 12px;
+    color: #444;
+    font-size: 0;
+    line-height: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .location-map-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .location-map-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(12,12,10,0.88) 0%, rgba(12,12,10,0.16) 62%);
+  }
+
+  .location-map-placeholder p {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+  }
+
+  .location-details { display: flex; flex-direction: column; gap: 24px; }
+
+  .loc-detail-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .loc-detail-item:last-child { border-bottom: none; }
+
+  .loc-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--green-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .loc-text .loc-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 4px;
+  }
+
+  .loc-text p {
+    font-size: 14px;
+    color: var(--white-dim);
+    line-height: 1.5;
+  }
+
+  .loc-text a {
+    color: var(--white-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .loc-text a:hover { color: var(--green-light); }
+
+  /* ══════════════════════════════════
+     MENU PAGE
+  ══════════════════════════════════ */
+
+  .menu-page-hero {
+    padding-top: 130px;
+    padding-bottom: 56px;
+    padding-left: 72px;
+    padding-right: 72px;
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .menu-page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 300;
+    line-height: 0.95;
+  }
+
+  .menu-page-title em { font-style: italic; color: var(--gold); }
+
+  .menu-cat-nav {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-top: 36px;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+  }
+
+  .menu-cat-nav::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--white-dim);
+    padding: 8px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .cat-btn:hover { border-color: var(--green-light); color: var(--green-light); }
+  .cat-btn.active { background: var(--green); border-color: var(--green); color: var(--white); }
+
+  .menu-content { padding: 56px 72px 80px; }
+
+  .menu-section { display: none; }
+  .menu-section.visible { display: block; }
+
+  .menu-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    margin-bottom: 8px;
+  }
+
+  .menu-section-title em { font-style: italic; color: var(--gold); }
+
+  .menu-section-desc {
+    font-size: 13px;
+    color: var(--white-dim);
+    margin-bottom: 36px;
+    letter-spacing: 0.03em;
+  }
+
+  .menu-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .menu-item {
+    background: var(--card);
+    padding: 24px;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .menu-item:hover { background: var(--card2); }
+
+  .menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .menu-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.2;
+    flex: 1;
+  }
+
+  .menu-item-price {
+    font-size: 15px;
+    color: var(--gold);
+    font-weight: 400;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .menu-item-desc {
+    font-size: 12px;
+    color: var(--white-dim);
+    line-height: 1.55;
+  }
+
+  /* Alcohol sub-categories */
+  .alcohol-group { margin-bottom: 48px; }
+
+  .alcohol-group-title {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    padding: 10px 0;
+    margin-bottom: 1px;
+    border-bottom: 1px solid var(--border-green);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .alcohol-group-title::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--green-light);
+  }
+
+  .alc-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 1px;
+  }
+
+  .alc-item {
+    background: var(--card);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s;
+  }
+
+  .alc-item:hover { background: var(--card2); }
+
+  .alc-item-name {
+    font-size: 14px;
+    color: var(--white);
+  }
+
+  .alc-item-prices {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .alc-price-tag {
+    text-align: center;
+  }
+
+  .alc-price-tag .alc-type {
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    display: block;
+  }
+
+  .alc-price-tag .alc-val {
+    font-size: 13px;
+    color: var(--gold);
+  }
+
+  /* Shisha grid */
+  .shisha-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .shisha-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+
+  .shisha-item:hover { border-color: var(--border-green); }
+
+  .shisha-item-name { font-size: 14px; }
+  .shisha-item-price { color: var(--gold); font-size: 14px; }
+
+  /* ══════════════════════════════════
+     RESERVATIONS PAGE
+  ══════════════════════════════════ */
+
+  .res-page {
+    min-height: 100vh;
+    padding-top: 130px;
+    padding-bottom: 80px;
+  }
+
+  .res-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    padding: 0 72px;
+    align-items: start;
+  }
+
+  .res-info-col { position: sticky; top: 100px; }
+
+  .res-info-col .section-title { margin-bottom: 16px; }
+
+  .res-perks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .res-perk {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .res-perk:hover { border-color: var(--border-green); }
+
+  .res-perk-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .res-perk-text h4 {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+
+  .res-perk-text p { font-size: 12px; color: var(--white-dim); line-height: 1.5; }
+
+  .res-contact-note {
+    margin-top: 28px;
+    padding: 16px;
+    background: var(--green-dim);
+    border: 1px solid var(--border-green);
+    border-radius: 2px;
+  }
+
+  .res-contact-note p {
+    font-size: 12px;
+    color: var(--white-dim);
+    line-height: 1.6;
+  }
+
+  .res-contact-note a {
+    color: var(--green-light);
+    text-decoration: none;
+  }
+
+  /* Form */
+  .res-form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 48px;
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 16px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-light);
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder { color: rgba(242,238,230,0.2); }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus { border-color: var(--green); }
+
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7C4E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+  }
+
+  .form-select option { background: var(--dark); }
+
+  .form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+  .form-submit {
+    width: 100%;
+    background: var(--green);
+    color: var(--white);
+    border: none;
+    padding: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+
+  .form-submit:hover { background: var(--green-light); }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 48px 32px;
+  }
+
+  .form-success .success-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .form-success h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+
+  .form-success p { font-size: 14px; color: var(--white-dim); }
+
+  /* ══════════════════════════════════
+     REVIEWS PAGE
+  ══════════════════════════════════ */
+
+  .reviews-hero {
+    padding-top: 130px;
+    padding-bottom: 56px;
+    padding-left: 72px;
+    padding-right: 72px;
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .reviews-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 56px;
+  }
+
+  .review-stat {
+    background: var(--card);
+    padding: 32px;
+    text-align: center;
+  }
+
+  .review-stat .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+
+  .review-stat .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin-top: 6px;
+    display: block;
+  }
+
+  .reviews-grid-section { padding: 72px 72px 80px; }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .review-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+
+  .review-card:hover { border-color: var(--border-green); }
+
+  .review-stars {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  .review-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.65;
+    color: var(--white-dim);
+    margin-bottom: 20px;
+  }
+
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .review-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--green-dim);
+    border: 1px solid var(--border-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green-light);
+  }
+
+  .review-author-info .author-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .review-author-info .author-date {
+    font-size: 11px;
+    color: var(--white-dim);
+  }
+
+  .review-platform {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    background: var(--green-dim);
+    padding: 4px 8px;
+    border-radius: 2px;
+  }
+
+  /* Google CTA */
+  .google-cta {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 48px;
+    text-align: center;
+    margin: 0 72px 80px;
+  }
+
+  .google-cta h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+
+  .google-cta p {
+    font-size: 14px;
+    color: var(--white-dim);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 56px 72px 32px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .footer-brand .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .footer-logo-box {
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #666;
+  }
+
+  .logo-box img,
+  .footer-logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: inherit;
+    background: #fff;
+  }
+
+  .footer-logo-text span:first-child {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    display: block;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .footer-logo-text span:last-child {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-light);
+  }
+
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.7;
+    max-width: 240px;
+  }
+
+  .footer-col h4 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 16px;
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .footer-col ul a, .footer-col ul li {
+    font-size: 13px;
+    color: var(--white-dim);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: block;
+  }
+
+  .footer-col ul a:hover { color: var(--green-light); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-bottom p {
+    font-size: 12px;
+    color: rgba(242,238,230,0.25);
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 12px;
+  }
+
+  .social-link {
+    width: 34px;
+    height: 34px;
+    background: var(--white-faint);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--white-dim);
+  }
+
+  .social-link:hover { background: var(--green-dim); border-color: var(--border-green); color: var(--green-light); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    nav { padding: 0 28px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    section { padding: 64px 28px; }
+    .hero-content { padding: 0 28px; }
+    .hero-scroll { right: 28px; }
+    .info-strip { padding: 16px 28px; gap: 24px; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-image-stack { height: 300px; }
+    .highlights-grid { grid-template-columns: 1fr; gap: 2px; }
+    .menu-preview-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .menu-page-hero { padding: 100px 28px 40px; }
+    .menu-content { padding: 40px 28px 64px; }
+
+    .res-layout { grid-template-columns: 1fr; gap: 40px; padding: 0 28px; }
+    .res-info-col { position: static; }
+    .res-form-card { padding: 28px; }
+
+    .reviews-hero { padding: 100px 28px 40px; }
+    .reviews-stats { grid-template-columns: repeat(2, 1fr); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .google-cta { margin: 0 28px 64px; padding: 32px 24px; }
+    .reviews-grid-section { padding: 40px 28px 64px; }
+
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    footer { padding: 40px 28px 24px; }
+
+    .location-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  @media (max-width: 640px) {
+    .hero-title { font-size: 44px; }
+    .menu-preview-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .reviews-stats { grid-template-columns: repeat(2, 1fr); }
+    .info-strip { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .alc-items-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#" onclick="showPage('home'); return false;">
+    <div class="logo-box"><img src="assets/images/logo.jpg" alt="Avaii logo"></div>
+    <div class="nav-wordmark">
+      <span>avaii</span>
+      <span>Resto · Cafe</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home'); return false;" class="active" id="nav-home">Home</a></li>
+    <li><a href="#" onclick="showPage('menu'); return false;" id="nav-menu">Menu</a></li>
+    <li><a href="#" onclick="showPage('reservations'); return false;" id="nav-reservations">Reservations</a></li>
+    <li><a href="#" onclick="showPage('reviews'); return false;" id="nav-reviews">Reviews</a></li>
+    <li><a href="#" onclick="showPage('reservations'); return false;" class="nav-reserve-btn">Book a Table</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="showPage('home'); closeMobileMenu(); return false;">Home</a>
+  <a href="#" onclick="showPage('menu'); closeMobileMenu(); return false;">Menu</a>
+  <a href="#" onclick="showPage('reservations'); closeMobileMenu(); return false;">Reservations</a>
+  <a href="#" onclick="showPage('reviews'); closeMobileMenu(); return false;">Reviews</a>
+  <a href="#" onclick="showPage('reservations'); closeMobileMenu(); return false;" class="reserve-mobile">Book a Table</a>
+</div>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg">
+      <div class="hero-overlay-lines"></div>
+      <video autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+        <source src="assets/videos/AQOrzurlcqPgSpi-MXb3w00Dwoqrgrmnzw3K_aqlm125eZvpT7fJnba5qsy8OQCf3G1Jj4V3j1EI3othsRdKaQp1HHRuDM23oPQBxbA.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Beit Meri, Lebanon</p>
+      <h1 class="hero-title">International<br><em>Flavors,</em><br>One Destination</h1>
+      <p class="hero-subtitle">A resto-cafe where world cuisine meets warm Lebanese hospitality. From breakfast to late night, from shisha to fine wine.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" onclick="showPage('menu'); return false;">Explore the Menu</a>
+        <a href="#" class="btn-outline" onclick="showPage('reservations'); return false;">Reserve a Table</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </div>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-item">
+      <div class="info-icon">🕐</div>
+      <div class="info-item-text">
+        <div class="label">Opening Hours</div>
+        <div class="value">9:00 AM – 1:00 AM · Daily</div>
+      </div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">📍</div>
+      <div class="info-item-text">
+        <div class="label">Location</div>
+        <div class="value">Beit Meri, Beirut</div>
+      </div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">📞</div>
+      <div class="info-item-text">
+        <div class="label">Reservations</div>
+        <div class="value">78/782277 · 04/533 253</div>
+      </div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon">🎮</div>
+      <div class="info-item-text">
+        <div class="label">Kids' Playground</div>
+        <div class="value">@avaii.playground</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section>
+    <div class="section-label">Our Story</div>
+    <h2 class="section-title">More Than a<br>Meal — <em>An Experience</em></h2>
+    <p class="section-subtitle">Avaii brings together the best of international cuisine in one beautifully designed space overlooking Beit Meri.</p>
+    <div class="about-grid">
+      <div class="about-image-stack">
+        <div class="about-img-main"><img src="assets/images/569162592_122109812883012092_5217801655720589965_n.jpg" alt="Avaii dining room interior" loading="lazy"></div>
+        <div class="about-img-accent"><img src="assets/images/561718922_122108343279012092_1001051194672006222_n.jpg" alt="Guest holding the Avaii menu" loading="lazy"></div>
+        <div class="about-img-badge">
+          <span class="badge-num">9AM</span>
+          <span class="badge-text">Until 1AM</span>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:15px;color:var(--white-dim);line-height:1.8;margin-bottom:28px;">
+          Nestled in the hills of Beit Meri, Avaii Resto-Cafe is a space that celebrates good food, beautiful design, and the perfect mood. Whether you're joining us for a leisurely breakfast, a business lunch, or an evening out with friends — we've crafted every detail to make it memorable.
+        </p>
+        <p style="font-size:15px;color:var(--white-dim);line-height:1.8;margin-bottom:36px;">
+          With a menu spanning international flavors — from fresh salads and gourmet burgers to fine pasta, premium steaks, and craft cocktails — there's always something new to discover at Avaii.
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <span class="about-feature-icon">🌍</span>
+            <h4>International Menu</h4>
+            <p>Cuisine from around the world, crafted with premium ingredients</p>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon">🧒</span>
+            <h4>Kids' Playground</h4>
+            <p>A dedicated play space so the whole family can relax</p>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon">💨</span>
+            <h4>Premium Shisha</h4>
+            <p>Curated shisha flavors in a stunning lounge setting</p>
+          </div>
+          <div class="about-feature">
+            <span class="about-feature-icon">🍷</span>
+            <h4>Full Bar & Wine</h4>
+            <p>An extensive selection of wines, spirits, and cocktails</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <div class="highlights">
+    <section>
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-title">Every Visit, <em>Elevated</em></h2>
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <span class="highlight-num">01</span>
+          <span class="highlight-icon">🍽️</span>
+          <h3>All-Day Dining</h3>
+          <p>From morning tartines and shakshuka to evening steaks and pasta — Avaii serves all day, every day, from 9AM to 1AM.</p>
+        </div>
+        <div class="highlight-card">
+          <span class="highlight-num">02</span>
+          <span class="highlight-icon">💨</span>
+          <h3>Shisha Lounge</h3>
+          <p>Unwind with premium shisha flavors in our elegantly designed lounge space. The perfect complement to a long evening with friends.</p>
+        </div>
+        <div class="highlight-card">
+          <span class="highlight-num">03</span>
+          <span class="highlight-icon">🧒</span>
+          <h3>Kids' Playground</h3>
+          <p>Let the kids play while you dine in peace. Avaii's dedicated children's playground makes us a true family destination.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MENU PREVIEW -->
+  <section>
+    <div class="section-label">Taste of Avaii</div>
+    <h2 class="section-title">Featured <em>Dishes</em></h2>
+    <p class="section-subtitle">A glimpse at some of our most loved plates — from light starters to indulgent mains.</p>
+    <div class="menu-preview-grid">
+      <div class="menu-preview-card" onclick="showPage('menu')">
+        <div class="menu-preview-img"><img src="assets/images/649108959_122125802325012092_4553253570551320360_n.jpg" alt="Mozzarella sticks with dipping sauce" loading="lazy"></div>
+        <div class="menu-preview-body">
+          <div class="menu-preview-category">Appetizer</div>
+          <h4>Mozzarella Sticks</h4>
+          <div class="menu-preview-price">$8</div>
+        </div>
+      </div>
+      <div class="menu-preview-card" onclick="showPage('menu')">
+        <div class="menu-preview-img"><img src="assets/images/593298647_122115846591012092_1062146373640681987_n.jpg" alt="Swiss mushroom burger served with fries" loading="lazy"></div>
+        <div class="menu-preview-body">
+          <div class="menu-preview-category">Burger</div>
+          <h4>Entrecôte Grilled</h4>
+          <div class="menu-preview-price">$13.5</div>
+        </div>
+      </div>
+      <div class="menu-preview-card" onclick="showPage('menu')">
+        <div class="menu-preview-img"><img src="assets/images/610962232_122119376547012092_1406506931159800797_n.jpg" alt="Freshly baked flatbread at Avaii" loading="lazy"></div>
+        <div class="menu-preview-body">
+          <div class="menu-preview-category">Breakfast</div>
+          <h4>Cheese 3al Hatab</h4>
+          <div class="menu-preview-price">$6</div>
+        </div>
+      </div>
+      <div class="menu-preview-card" onclick="showPage('menu')">
+        <div class="menu-preview-img"><img src="assets/images/594068029_122115418839012092_5150781657631259953_n.jpg" alt="Penne pasta in tomato sauce" loading="lazy"></div>
+        <div class="menu-preview-body">
+          <div class="menu-preview-category">Pasta</div>
+          <h4>Penne Arabiatta</h4>
+          <div class="menu-preview-price">$8</div>
+        </div>
+      </div>
+    </div>
+    <div class="view-all-wrap">
+      <a href="#" class="btn-primary" onclick="showPage('menu'); return false;">View Full Menu</a>
+    </div>
+  </section>
+
+  <!-- LOCATION -->
+  <section style="background:var(--dark);border-top:1px solid var(--border);">
+    <div class="section-label">Find Us</div>
+    <h2 class="section-title">Visit <em>Avaii</em></h2>
+    <div class="location-grid">
+      <div class="location-map-placeholder">
+        <img src="assets/images/582865119_122113386759012092_7474360933673444708_n.jpg" alt="Avaii dining room in Beit Meri" loading="lazy">
+        📍
+        <p>Beit Meri, Beirut</p>
+      </div>
+      <div class="location-details">
+        <div class="loc-detail-item">
+          <div class="loc-icon">📍</div>
+          <div class="loc-text">
+            <div class="loc-label">Address</div>
+            <p>Beit Meri, Beirut, Lebanon</p>
+          </div>
+        </div>
+        <div class="loc-detail-item">
+          <div class="loc-icon">🕐</div>
+          <div class="loc-text">
+            <div class="loc-label">Opening Hours</div>
+            <p>Monday – Sunday<br>9:00 AM – 1:00 AM</p>
+          </div>
+        </div>
+        <div class="loc-detail-item">
+          <div class="loc-icon">📞</div>
+          <div class="loc-text">
+            <div class="loc-label">Phone</div>
+            <p><a href="tel:78782277">78/782277</a><br><a href="tel:04533253">04/533 253</a></p>
+          </div>
+        </div>
+        <div class="loc-detail-item">
+          <div class="loc-icon">📱</div>
+          <div class="loc-text">
+            <div class="loc-label">Instagram</div>
+            <p><a href="#">@avaii.restocafe</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end home -->
+
+<!-- ═══════════════ MENU ═══════════════ -->
+<div class="page" id="page-menu">
+
+  <div class="menu-page-hero">
+    <div class="section-label">Avaii Resto-Cafe</div>
+    <h1 class="menu-page-title">Our <em>Menu</em></h1>
+    <p style="font-size:14px;color:var(--white-dim);margin-top:12px;max-width:500px;line-height:1.7;">International flavors, crafted daily. Browse our full menu below — from morning breakfast to late-night dining.</p>
+
+    <div class="menu-cat-nav" id="menuCatNav">
+      <button class="cat-btn active" data-cat="appetizers">Appetizers</button>
+      <button class="cat-btn" data-cat="salads">Salads</button>
+      <button class="cat-btn" data-cat="mains">Main Course</button>
+      <button class="cat-btn" data-cat="pizza">Pizza & Panuzzo</button>
+      <button class="cat-btn" data-cat="pasta">Pasta</button>
+      <button class="cat-btn" data-cat="burgers">Burgers & Sandwiches</button>
+      <button class="cat-btn" data-cat="breakfast">Breakfast</button>
+      <button class="cat-btn" data-cat="dessert">Dessert</button>
+      <button class="cat-btn" data-cat="kids">Kids</button>
+      <button class="cat-btn" data-cat="cold-drinks">Cold Drinks</button>
+      <button class="cat-btn" data-cat="hot-drinks">Hot Drinks</button>
+      <button class="cat-btn" data-cat="alcohol">Alcohol</button>
+      <button class="cat-btn" data-cat="shisha">Shisha</button>
+    </div>
+  </div>
+
+  <div class="menu-content" id="menuContent">
+
+    <!-- APPETIZERS -->
+    <div class="menu-section visible" data-section="appetizers">
+      <h2 class="menu-section-title"><em>Appetizers</em></h2>
+      <p class="menu-section-desc">Start your meal with something bold — from crispy bites to elegant tartars.</p>
+      <div class="menu-items-grid" id="grid-appetizers"></div>
+    </div>
+
+    <!-- SALADS -->
+    <div class="menu-section" data-section="salads">
+      <h2 class="menu-section-title"><em>Salads</em></h2>
+      <p class="menu-section-desc">Fresh, vibrant, and crafted with premium ingredients.</p>
+      <div class="menu-items-grid" id="grid-salads"></div>
+    </div>
+
+    <!-- MAINS -->
+    <div class="menu-section" data-section="mains">
+      <h2 class="menu-section-title">Main <em>Course</em></h2>
+      <p class="menu-section-desc">Grilled, sautéed, and slow-cooked to perfection.</p>
+      <div class="menu-items-grid" id="grid-mains"></div>
+    </div>
+
+    <!-- PIZZA -->
+    <div class="menu-section" data-section="pizza">
+      <h2 class="menu-section-title">Pizza &amp; <em>Panuzzo</em></h2>
+      <p class="menu-section-desc">Stone-baked bases, premium toppings, Italian-inspired panuzzos.</p>
+      <div class="menu-items-grid" id="grid-pizza"></div>
+    </div>
+
+    <!-- PASTA -->
+    <div class="menu-section" data-section="pasta">
+      <h2 class="menu-section-title"><em>Pasta</em></h2>
+      <p class="menu-section-desc">Classic recipes, refined technique.</p>
+      <div class="menu-items-grid" id="grid-pasta"></div>
+    </div>
+
+    <!-- BURGERS -->
+    <div class="menu-section" data-section="burgers">
+      <h2 class="menu-section-title">Burgers &amp; <em>Sandwiches</em></h2>
+      <p class="menu-section-desc">Stacked, layered, and full of flavor.</p>
+      <div class="menu-items-grid" id="grid-burgers"></div>
+    </div>
+
+    <!-- BREAKFAST -->
+    <div class="menu-section" data-section="breakfast">
+      <h2 class="menu-section-title"><em>Breakfast</em></h2>
+      <p class="menu-section-desc">Morning essentials from 9:00 AM — tartines, eggs every way, and classic Lebanese bites.</p>
+      <div class="menu-items-grid" id="grid-breakfast"></div>
+    </div>
+
+    <!-- DESSERT -->
+    <div class="menu-section" data-section="dessert">
+      <h2 class="menu-section-title"><em>Dessert</em></h2>
+      <p class="menu-section-desc">Indulgent finales to every meal.</p>
+      <div class="menu-items-grid" id="grid-dessert"></div>
+    </div>
+
+    <!-- KIDS -->
+    <div class="menu-section" data-section="kids">
+      <h2 class="menu-section-title">Kids' <em>Menu</em></h2>
+      <p class="menu-section-desc">Every kids' meal includes a fresh juice and fries. Little ones eat well at Avaii.</p>
+      <div class="menu-items-grid" id="grid-kids"></div>
+    </div>
+
+    <!-- COLD DRINKS -->
+    <div class="menu-section" data-section="cold-drinks">
+      <h2 class="menu-section-title">Cold <em>Drinks</em></h2>
+      <p class="menu-section-desc">Refreshing beverages — from fresh juices to specialty frappes.</p>
+      <div class="menu-items-grid" id="grid-cold-drinks"></div>
+    </div>
+
+    <!-- HOT DRINKS -->
+    <div class="menu-section" data-section="hot-drinks">
+      <h2 class="menu-section-title">Hot <em>Drinks</em></h2>
+      <p class="menu-section-desc">Expertly brewed coffees, teas, and specialty hot beverages.</p>
+      <div class="menu-items-grid" id="grid-hot-drinks"></div>
+    </div>
+
+    <!-- ALCOHOL -->
+    <div class="menu-section" data-section="alcohol">
+      <h2 class="menu-section-title"><em>Alcohol</em></h2>
+      <p class="menu-section-desc">A curated selection of wines, spirits, cocktails, and beers.</p>
+      <div id="grid-alcohol"></div>
+    </div>
+
+    <!-- SHISHA -->
+    <div class="menu-section" data-section="shisha">
+      <h2 class="menu-section-title"><em>Shisha</em></h2>
+      <p class="menu-section-desc">Premium shisha flavors served in our lounge setting.</p>
+      <div class="shisha-grid" id="grid-shisha"></div>
+    </div>
+
+  </div>
+</div><!-- end menu -->
+
+<!-- ═══════════════ RESERVATIONS ═══════════════ -->
+<div class="page" id="page-reservations">
+  <div class="res-page">
+    <div class="res-layout">
+      <div class="res-info-col">
+        <div class="section-label">Reserve Your Table</div>
+        <h2 class="section-title">Book a <em>Dining Experience</em></h2>
+        <p style="font-size:14px;color:var(--white-dim);line-height:1.7;margin-top:16px;">
+          Secure your table at Avaii and enjoy a seamless dining experience. For large groups or special occasions, we're happy to help with tailored arrangements.
+        </p>
+        <div class="res-perks">
+          <div class="res-perk">
+            <span class="res-perk-icon">🌅</span>
+            <div class="res-perk-text">
+              <h4>All-Day Dining</h4>
+              <p>Open daily from 9:00 AM until 1:00 AM — breakfast, lunch, or dinner.</p>
+            </div>
+          </div>
+          <div class="res-perk">
+            <span class="res-perk-icon">🎉</span>
+            <div class="res-perk-text">
+              <h4>Special Occasions</h4>
+              <p>Birthdays, anniversaries, and private celebrations catered with care.</p>
+            </div>
+          </div>
+          <div class="res-perk">
+            <span class="res-perk-icon">🧒</span>
+            <div class="res-perk-text">
+              <h4>Family Friendly</h4>
+              <p>Dedicated kids' playground to keep the little ones entertained.</p>
+            </div>
+          </div>
+        </div>
+        <div class="res-contact-note">
+          <p>Prefer to call? Reach us at <a href="tel:78782277">78/782277</a> or <a href="tel:04533253">04/533 253</a>. Open daily 9AM–1AM.</p>
+        </div>
+      </div>
+
+      <div class="res-form-card">
+        <div class="form-title">Reservation Details</div>
+        <div id="resFormWrap">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" type="text" placeholder="Your name" id="res-name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input class="form-input" type="tel" placeholder="+961 XX XXX XXX" id="res-phone">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input class="form-input" type="date" id="res-date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time</label>
+              <input class="form-input" type="time" id="res-time" min="09:00" max="24:00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Number of Guests</label>
+              <select class="form-select" id="res-guests">
+                <option value="">Select guests</option>
+                <option>1 Guest</option>
+                <option>2 Guests</option>
+                <option>3 Guests</option>
+                <option>4 Guests</option>
+                <option>5 Guests</option>
+                <option>6 Guests</option>
+                <option>7–10 Guests</option>
+                <option>11–15 Guests</option>
+                <option>16+ Guests</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Seating Preference</label>
+              <select class="form-select" id="res-seating">
+                <option value="">No preference</option>
+                <option>Indoor</option>
+                <option>Outdoor / Terrace</option>
+                <option>By the window</option>
+                <option>Private area</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Occasion</label>
+            <select class="form-select" id="res-occasion">
+              <option value="">Select occasion (optional)</option>
+              <option>Birthday</option>
+              <option>Anniversary</option>
+              <option>Business Dinner</option>
+              <option>Family Gathering</option>
+              <option>Date Night</option>
+              <option>Casual Dining</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Additional Notes</label>
+            <textarea class="form-textarea" placeholder="Dietary requirements, special requests, or anything else we should know..." id="res-notes"></textarea>
+          </div>
+          <button class="form-submit" onclick="submitReservation()">Confirm Reservation</button>
+        </div>
+        <div class="form-success" id="resSuccess">
+          <span class="success-icon">✅</span>
+          <h3>Reservation Received</h3>
+          <p>Thank you! We'll confirm your booking shortly at the number you provided.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end reservations -->
+
+<!-- ═══════════════ REVIEWS ═══════════════ -->
+<div class="page" id="page-reviews">
+
+  <div class="reviews-hero">
+    <div class="section-label">Guest Experiences</div>
+    <h1 class="menu-page-title">What Our <em>Guests</em> Say</h1>
+    <p style="font-size:14px;color:var(--white-dim);margin-top:12px;line-height:1.7;max-width:500px;">Real reviews from guests who've dined, relaxed, and celebrated with us at Avaii.</p>
+    <div class="reviews-stats">
+      <div class="review-stat">
+        <span class="stat-num">4.8</span>
+        <span class="stat-label">Average Rating</span>
+      </div>
+      <div class="review-stat">
+        <span class="stat-num">200+</span>
+        <span class="stat-label">Reviews</span>
+      </div>
+      <div class="review-stat">
+        <span class="stat-num">98%</span>
+        <span class="stat-label">Recommend Us</span>
+      </div>
+      <div class="review-stat">
+        <span class="stat-num">★★★★★</span>
+        <span class="stat-label">Google Rating</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-grid-section">
+    <div class="section-label">Recent Reviews</div>
+    <h2 class="section-title">Guest <em>Stories</em></h2>
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"The ambiance alone is worth the trip to Beit Meri. Geometric lighting, olive green chairs, stunning views — and the food matched every bit of it. The Salmon Tartar and Truffle Pizza were exceptional."</p>
+        <div class="review-author">
+          <div class="review-avatar">M</div>
+          <div class="review-author-info">
+            <div class="author-name">Maya K.</div>
+            <div class="author-date">January 2026</div>
+          </div>
+          <div class="review-platform">Google</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Brought the whole family for a weekend lunch. Kids loved the playground, we loved the food. The Entrecôte was cooked perfectly and the service was warm and attentive throughout."</p>
+        <div class="review-author">
+          <div class="review-avatar">R</div>
+          <div class="review-author-info">
+            <div class="author-name">Rami H.</div>
+            <div class="author-date">December 2025</div>
+          </div>
+          <div class="review-platform">Google</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Celebrated my birthday here and the team made it so special. The Jardin Pain Perdu dessert is honestly one of the best things I've eaten in Lebanon. Will absolutely be back."</p>
+        <div class="review-author">
+          <div class="review-avatar">L</div>
+          <div class="review-author-info">
+            <div class="author-name">Lara S.</div>
+            <div class="author-date">November 2025</div>
+          </div>
+          <div class="review-platform">Instagram</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Came for breakfast and stayed for three hours. The shakshouka and the smoked salmon tartine were both flawless. Love the vibe here — modern but relaxed. Exactly what Beit Meri needed."</p>
+        <div class="review-author">
+          <div class="review-avatar">J</div>
+          <div class="review-author-info">
+            <div class="author-name">Joelle M.</div>
+            <div class="author-date">October 2025</div>
+          </div>
+          <div class="review-platform">Google</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"The shisha and cocktail combo is unbeatable. Aperol Spritz, Gin Basil pitcher with friends, great music, and that incredible ceiling lighting — this is a go-to spot for us now."</p>
+        <div class="review-author">
+          <div class="review-avatar">T</div>
+          <div class="review-author-info">
+            <div class="author-name">Tony A.</div>
+            <div class="author-date">February 2026</div>
+          </div>
+          <div class="review-platform">Google</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">"Beautiful space with a huge menu that actually delivers on quality. The Goat Cheese Warm Salad was a highlight — the fig compote and pistachio combination was brilliant. Service was friendly and efficient."</p>
+        <div class="review-author">
+          <div class="review-avatar">C</div>
+          <div class="review-author-info">
+            <div class="author-name">Carla B.</div>
+            <div class="author-date">January 2026</div>
+          </div>
+          <div class="review-platform">Google</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="google-cta">
+    <h3>Loved Your Visit?</h3>
+    <p>Share your experience and help others discover Avaii. Your review means the world to us.</p>
+    <a href="#" class="btn-primary" style="display:inline-block;">Leave a Google Review</a>
+  </div>
+
+</div><!-- end reviews -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-box"><img src="assets/images/logo.jpg" alt="Avaii logo"></div>
+        <div class="footer-logo-text">
+          <span>avaii</span>
+          <span>Resto · Cafe</span>
+        </div>
+      </div>
+      <p>International flavors, one destination. Dining, shisha, and celebration in the heart of Beit Meri.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#" onclick="showPage('home'); return false;">Home</a></li>
+        <li><a href="#" onclick="showPage('menu'); return false;">Menu</a></li>
+        <li><a href="#" onclick="showPage('reservations'); return false;">Reservations</a></li>
+        <li><a href="#" onclick="showPage('reviews'); return false;">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Hours</h4>
+      <ul>
+        <li>Monday – Sunday</li>
+        <li>9:00 AM – 1:00 AM</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:78782277">78/782277</a></li>
+        <li><a href="tel:04533253">04/533 253</a></li>
+        <li>Beit Meri, Beirut</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Avaii Resto-Cafe · Beit Meri, Lebanon · All rights reserved.</p>
+    <div class="footer-social">
+      <a class="social-link" href="#">📷</a>
+      <a class="social-link" href="#">📘</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+var menuData = {
+  appetizers: [
+    { name: "Batata Caliente", price: "$7", desc: "Potato cubes, sauce bravas, sauce aioli, chives" },
+    { name: "Salmon Pizzete", price: "$12", desc: "Tortilla bread, cream cheese, smoked salmon, sumac, dill, chives, herbed lemon oil, micro greens" },
+    { name: "Basterma Pizzete", price: "$9.5", desc: "Tortilla bread, labneh, basterma, olive oil, zaatar zouba3" },
+    { name: "Chicken Tenders", price: "$8", desc: "Chicken tenders, honey mustard, micro greens garnish" },
+    { name: "Philly Rolls", price: "$7", desc: "Philadelphia roll, lolorosso, cocktail barbecue sauce" },
+    { name: "Fries Poutine", price: "$6.5", desc: "Fries, demi glace, mixed cheese" },
+    { name: "Fries Alfredo", price: "$7", desc: "Fries, white mushroom sauce, parmesan cheese" },
+    { name: "Mozzarella Sticks", price: "$8", desc: "Lolorosso, mozzarella sticks, cocktail barbecue sauce" },
+    { name: "Curly Fries", price: "$5", desc: "Curly fries, barbecue cocktail sauce" },
+    { name: "Fries", price: "$4.5", desc: "Fries, barbecue cocktail sauce" },
+    { name: "Boom Bao", price: "$8", desc: "Black bao bun, shrimps 21/25, flour, dynamite shrimp sauce, spring onion" },
+    { name: "Crispy Rice Salmon", price: "$9", desc: "Crispy rice, marinated salmon, pomegranate seeds, dill, aioli sauce, fried vermicelli" },
+    { name: "Nachos", price: "$10", desc: "Nachos, cheddar sauce, mozzarella, tomato, pico de gallo sauce, sour cream, guacamole" },
+    { name: "Edamame", price: "$10", desc: "Grilled edamame, lemon, togarashi pepper" },
+    { name: "Salmon Tartar", price: "$15", desc: "Fresh salmon, ginger compote, olive oil, dill, chives, capers, mousse avocado, lollo rosso, baked bread" },
+    { name: "Bruschetta Smoked Salmon", price: "$10", desc: "Smoked salmon, sourdough, cream cheese, dill, capers, cherry tomato served with mixed greens" },
+    { name: "Bruschetta Bresaola", price: "$10", desc: "Bresaola, sourdough, pesto sauce, grana padano, cherry tomato, balsamic reduction" },
+    { name: "Bruschetta Pomodori", price: "$7", desc: "Sourdough, cherry tomato yellow, red and green, olive oil, grana padano and herbs" }
+  ],
+  salads: [
+    { name: "Salmon Grilled Salad", price: "$17", desc: "Mixed greens, romaine lettuce, grilled salmon fillet, poppy seeds, avocado, framboise sauce, white sesame, micro greens" },
+    { name: "Chicken Caesar Salad", price: "$12", desc: "Romaine lettuce, herbed lemon oil, cherry tomato, fried tortilla bread, parmesan, iceberg, caesar sauce, chicken breast" },
+    { name: "Shrimp Caesar Salad", price: "$15", desc: "Romaine lettuce, herbed lemon oil, cherry tomato, fried tortilla bread, parmesan, iceberg, caesar sauce, shrimps" },
+    { name: "Goat Cheese Warm Salad", price: "$15", desc: "Baguette, goat cheese, mixed greens, romaine, dried fig, fig compote, granny smith apple, pistachio, balsamic molasses, parmesan, honey" },
+    { name: "Quinoa Halloumi Salad", price: "$11", desc: "Boiled quinoa, grilled halloumi, roasted sweet potato, zucchini, eggplant, cherry tomato, mint, herbed balsamic, sunflower seeds, dried cranberries" },
+    { name: "Green Salad", price: "$9", desc: "Mixed greens, romaine lettuce, cherry tomato, herbed lemon oil, asparagus" },
+    { name: "Burrata Salad", price: "$18", desc: "Burrata cheese, asparagus, roasted hazelnut, lemon zest, olive oil, salt, black pepper, butter, oregano" }
+  ],
+  mains: [
+    { name: "Salmon Grilled", price: "$23", desc: "Salmon fillet, boiled carrot, grilled zucchini, baby potato, asparagus, butter, oregano, french thyme, broccoli" },
+    { name: "Esca-ghocchi", price: "$17", desc: "Chicken escalope, gnocchi, pesto sauce, crème fraîche, parmesan, olive oil" },
+    { name: "Grilled Chicken White Mushroom Sauce", price: "$15", desc: "Marinated chicken breast, boiled carrots, zucchini, fries, white mushroom sauce" },
+    { name: "Steak Frite (Brazil)", price: "$19", desc: "Filet tenderloin (Brazil), fries, boiled carrots, zucchini, white mushroom sauce" },
+    { name: "Steak Frite (Australia MB3+)", price: "$46", desc: "Premium filet tenderloin (Australia MB3+), fries, boiled carrots, zucchini, white mushroom sauce" },
+    { name: "Entrecôte Grilled", price: "$55", desc: "Entrecôte (Australia MB3+), boiled carrots, zucchini, baby potato, mushroom sauce, broccoli" },
+    { name: "Suprema Parmegiana", price: "$16", desc: "Chicken escalope, tomato sauce, grated parmesan, grated mozzarella, fries" }
+  ],
+  pizza: [
+    { name: "Alfredo Pizza", price: "$12", desc: "White mushroom sauce, marinated chicken, fresh mushroom, olive oil, mozzarella, basil" },
+    { name: "BBQ Pizza", price: "$12", desc: "Mozzarella, pizza sauce, marinated chicken, BBQ sauce, basil" },
+    { name: "Smoked Salmon Pizza", price: "$21", desc: "Mozzarella, crème fraîche, parmesan, arugula, herbed lemon oil, smoked salmon, lemon wedges, capers, dill" },
+    { name: "Truffle Pizza", price: "$16", desc: "Mozzarella, truffle sauce, fresh mushroom, arugula, parmesan, truffle oil" },
+    { name: "Vegetarian Pizza", price: "$12", desc: "Mozzarella, pizza sauce, grilled zucchini, eggplant, fresh mushroom, green and red pepper" },
+    { name: "Pepperoni Pizza", price: "$13", desc: "Pepperoni, mozzarella, pizza sauce, basil, olive oil" },
+    { name: "Margherita Pizza", price: "$9", desc: "Mozzarella, pizza sauce, basil, parmesan, olive oil" },
+    { name: "Bresaola Pizza", price: "$21", desc: "Bresaola, pizza sauce, grana padano, arugula, olive oil" },
+    { name: "Beef Stroganoff Panuzzo", price: "$15", desc: "Fresh mushroom, topside Brasil, onion, cream cheese, pizza dough, grana padano, iceberg, cherry tomato, herbed lemon oil" },
+    { name: "Turkey & Cheese Panuzzo", price: "$12", desc: "Turkey, emmental, avocado, tomato, dill pickles, arugula, grainy honey mustard, olive oil, pizza dough" },
+    { name: "Chicken Avocado Panuzzo", price: "$10", desc: "Marinated chicken, dill pickles, mayo pesto, tomato, mixed greens, avocado, pizza dough" }
+  ],
+  pasta: [
+    { name: "Linguini Pesto", price: "$10", desc: "Boiled linguini, pesto sauce, crème fraîche, parmesan, salt, black pepper" },
+    { name: "Penne Alfredo", price: "$9", desc: "Boiled penne, fresh mushroom, garlic, white mushroom sauce, parmesan" },
+    { name: "Penne Arabiatta", price: "$8", desc: "Boiled penne, tomato sauce, cherry tomato, olive oil, basil, parmesan" },
+    { name: "Rigatoni Truffle", price: "$13", desc: "Boiled rigatoni, truffle sauce, truffle oil, parmesan" },
+    { name: "Linguini Shrimps", price: "$14", desc: "Boiled linguini, shrimps 21/25, tomato sauce, basil, garlic, olive oil, lemon juice, cherry tomato" }
+  ],
+  burgers: [
+    { name: "Tuna Sandwich", price: "$7", desc: "Tuna, capers, mayonnaise, tomato, dill pickles, soy sauce, white baguette, mixed greens" },
+    { name: "Philly Steak Sandwich", price: "$12.5", desc: "Beef fillet, green pepper, red onion, fresh mushroom, emmental, philadelphia sauce, mixed greens, baguette" },
+    { name: "Chicken Avocado Sandwich", price: "$10", desc: "Grilled chicken, avocado, mixed greens, fresh toppings" },
+    { name: "Chicken Quesadillas", price: "$9", desc: "Chicken quesadillas, mozzarella, cheddar, pico de gallo sauce, sour cream, guacamole, tortilla bread" },
+    { name: "Green Halloumi Quesadillas", price: "$8.5", desc: "Grilled halloumi, tortilla bread, mayo pesto sauce, sour cream, pico de gallo sauce, guacamole" },
+    { name: "Grilled Chicken Burger", price: "$11", desc: "Marinated chicken breast, emmental, burger bun, aioli sauce, dill pickles, cherry tomato, fries" },
+    { name: "Fish Burger", price: "$12", desc: "Fish burger, tartar sauce, dill pickles, iceberg, burger bun, mixed greens, cherry tomato, fries" },
+    { name: "Crispy Chicken Burger", price: "$11.5", desc: "Burger bun, crispy chicken, mixed greens, cherry tomato, herbed lemon oil, fries" },
+    { name: "Beef Burger", price: "$12", desc: "Beef burger, burger bun, kimchi sauce, dill pickles, mixed greens, cherry tomato, cheddar, fries" },
+    { name: "Swiss Mushroom Burger", price: "$13.5", desc: "Beef burger, sautéed mushroom, emmental, white mushroom sauce, mixed greens, cherry tomato, fries" },
+    { name: "Twist Burger", price: "$12", desc: "Tortilla bread, cheddar, mozzarella, iceberg, kimchi sauce, beef burger, mixed greens, cherry tomato, fries" }
+  ],
+  breakfast: [
+    { name: "Zaatar 3al Hatab", price: "$4", desc: "Zaatar mixed, pomegranate seeds, hazelnut crushed" },
+    { name: "Zaatar with Labneh", price: "$5", desc: "Zaatar mixed, labneh, pistachio, pomegranate seeds" },
+    { name: "Cheese 3al Hatab", price: "$6", desc: "Mixed cheese, roasted sesame" },
+    { name: "Cheese Garden", price: "$8", desc: "Mixed cheese, pesto sauce, sundried tomato, arugula" },
+    { name: "Shakshouka", price: "$6", desc: "Fetta cheese, local thyme, eggs" },
+    { name: "Omelette Plain", price: "$4.5", desc: "Egg, sourdough, butter, grana padano, cherry tomato, mixed greens" },
+    { name: "Vegetarian Omelette", price: "$6", desc: "Egg, sourdough, butter, grana padano, cherry tomato, fresh mushroom, spring onion, mixed greens" },
+    { name: "Goat Cheese Omelette", price: "$7", desc: "Egg, sourdough, goat cheese, butter, grana padano, cherry tomato, mixed greens" },
+    { name: "White Egg Plain", price: "$5", desc: "White egg, sourdough, butter, grana padano, cherry tomato, mixed greens" },
+    { name: "Scrambled Egg", price: "$5", desc: "Egg, sourdough, butter, grana padano, cherry tomato, mixed greens" },
+    { name: "Chorizo Scrambled Egg", price: "$7", desc: "Egg, sourdough, chorizo, butter, grana padano, cherry tomato, mixed greens" },
+    { name: "Sunny Side Up", price: "$4.5", desc: "Egg, sourdough, butter, cherry tomato, mixed greens" },
+    { name: "Poached Eggs", price: "$5.5", desc: "Eggs, brioche toast, cherry tomato, herbed lemon oil, hollandaise sauce, mixed greens" },
+    { name: "Turkey Poached Eggs", price: "$6.5", desc: "Eggs, smoked turkey breast, brioche toast, cherry tomato, hollandaise sauce, mixed greens" },
+    { name: "Salmon Poached Eggs", price: "$8.5", desc: "Eggs, smoked salmon, brioche toast, cherry tomato, hollandaise sauce, mixed greens" },
+    { name: "Labneh with Makdous Tartine", price: "$5", desc: "Labneh, sourdough, olive oil, makdous, walnut, cherry tomato, mixed greens" },
+    { name: "Smoked Salmon Tartine", price: "$10", desc: "Scottish smoked salmon, sourdough, cream cheese, crispy capers, dill, cherry tomato, mixed greens" },
+    { name: "Tomato Burrata", price: "$15", desc: "Burrata, sourdough, roasted cherry tomato, pesto sauce, balsamic reduction, mixed greens" },
+    { name: "Boiled Egg Tartine", price: "$5", desc: "Boiled eggs, sourdough, mousse avocado, onion, mint, cherry tomato, mixed greens" },
+    { name: "Goat Cheese Tartine with Beetroot", price: "$7", desc: "Goat cheese, sourdough, beetroot, pistachio, honey, balsamic reduction, cherry tomato, mixed greens" },
+    { name: "Bresaola Tartine", price: "$10", desc: "Bresaola, sourdough, grana padano, pesto sauce, cherry tomato, balsamic reduction, mixed greens" },
+    { name: "Salmon Tartar", price: "$15", desc: "Fresh salmon, ginger compote, olive oil, dill, chives, capers, mousse avocado, lollo rosso, baked bread" }
+  ],
+  dessert: [
+    { name: "San Sebastian", price: "$11", desc: "San Sebastian cheesecake, chocolate sauce, framboise sauce" },
+    { name: "Luxe Praline", price: "$7", desc: "Chocolate praline, cocoa powder" },
+    { name: "Jardin Pain Perdu", price: "$12", desc: "Pain perdu, caramel sauce, red currant, framboise, caramel coating, chocolate soil, vanilla ice cream, feuilletine, brioche" },
+    { name: "Cookies Chocolate Fondant", price: "$9", desc: "Chocolate fondant, cookies, vanilla ice cream, powdered sugar, feuilletine" },
+    { name: "Tiramisu", price: "$9", desc: "Mascarpone, lady finger, coffee syrup, cocoa powder" },
+    { name: "Quatro Chocolate", price: "$11", desc: "Pizza dough, fresh cream, milk chocolate, white chocolate, dark chocolate, ruby chocolate" }
+  ],
+  kids: [
+    { name: "Beef Mini Burger", price: "$8", desc: "Beef burger, iceberg, fries, mini burger bun, ketchup + fresh juice" },
+    { name: "Chicken Mini Burger", price: "$9", desc: "Chicken breast, iceberg, fries, mayonnaise, mini burger bun, ketchup + fresh juice" },
+    { name: "Mini Pizza Margherita", price: "$7.5", desc: "Pizza dough, pizza sauce, mozzarella, fries + fresh juice" },
+    { name: "Pepperoni Mini Pizza", price: "$8.5", desc: "Pizza dough, pizza sauce, mozzarella, pepperoni, fries + fresh juice" },
+    { name: "Nuggets with Fries", price: "$8", desc: "Nuggets, fries, ketchup + fresh juice" },
+    { name: "Crispy with Fries", price: "$10", desc: "Chicken tenders, fries, ketchup + fresh juice" }
+  ],
+  coldDrinks: [
+    { name: "Small Water", price: "$1" },
+    { name: "Large Water", price: "$2" },
+    { name: "Via Sparkling Water 33cl", price: "$2" },
+    { name: "Via Sparkling Water 1L", price: "$5" },
+    { name: "Soft Drinks", price: "$2.5" },
+    { name: "Red Bull Energy Drink", price: "$5" },
+    { name: "Red Bull Light", price: "$5" },
+    { name: "Minted Lemonade", price: "$5" },
+    { name: "Lemonade", price: "$5" },
+    { name: "Fresh Carrot", price: "$5" },
+    { name: "Fresh Orange", price: "$5" },
+    { name: "Avaii Refresher", price: "$6" },
+    { name: "Smoothies", price: "$6" },
+    { name: "Milkshake (Chocolate / Strawberry)", price: "$6" },
+    { name: "Matcha Frappe", price: "$6" },
+    { name: "White Mocha Frappe", price: "$6" },
+    { name: "Mocha Frappe", price: "$6" },
+    { name: "Coffee Frappe", price: "$6" },
+    { name: "Iced Matcha Latte", price: "$6" },
+    { name: "Iced Caramel Macchiato", price: "$6" },
+    { name: "Iced Latte", price: "$5" },
+    { name: "Iced Americano", price: "$4" },
+    { name: "Add Flavor", price: "+$1" }
+  ],
+  hotDrinks: [
+    { name: "Espresso", price: "$2.5" },
+    { name: "Double Espresso", price: "$3" },
+    { name: "Turkish Coffee", price: "$3" },
+    { name: "Turkish Coffee Large", price: "$5" },
+    { name: "Nescafe", price: "$4.5" },
+    { name: "Cafe Blanc", price: "$3.5" },
+    { name: "Americano", price: "$4" },
+    { name: "Café Latte", price: "$5" },
+    { name: "Cappuccino", price: "$6" },
+    { name: "Mocha", price: "$6" },
+    { name: "White Mocha", price: "$6" },
+    { name: "Flat White", price: "$6" },
+    { name: "Matcha Latte", price: "$6" },
+    { name: "Spanish Latte", price: "$6" },
+    { name: "Macchiato", price: "$6" },
+    { name: "Hot Chocolate", price: "$5" },
+    { name: "Tea Selection", price: "$5" },
+    { name: "Add Milk", price: "+$1" },
+    { name: "Add Flavor (Vanilla, Hazelnut, Caramel)", price: "+$1" }
+  ],
+  alcohol: {
+    aperitifs: [
+      { name: "Aperol", glass: "$8", bottle: "$80" },
+      { name: "Martini Bianco", glass: "$8", bottle: "$80" },
+      { name: "Martini Rosso", glass: "$8", bottle: "$80" },
+      { name: "Martini Dry", glass: "$8", bottle: "$60" },
+      { name: "Campari", glass: "$7", bottle: "$70" }
+    ],
+    gin: [
+      { name: "Gordons", glass: "$7", bottle: "$70" },
+      { name: "Tanqueray", glass: "$8", bottle: "$80" },
+      { name: "Hendricks", glass: "$10", bottle: "$100" }
+    ],
+    tequila: [
+      { name: "Jose Cuervo", glass: "$8", bottle: "$80" },
+      { name: "Jose Cuervo Gold", glass: "$10", bottle: "$100" },
+      { name: "Mijenta (Italian)", glass: "$8", bottle: "$80" }
+    ],
+    rum: [
+      { name: "Captain Morgan", glass: "$7", bottle: "$70" },
+      { name: "Bacardi", glass: "$8", bottle: "$80" }
+    ],
+    vodka: [
+      { name: "Stolichnaya", glass: "$7", bottle: "$70" },
+      { name: "Grey Goose", glass: "$15", bottle: "$150" }
+    ],
+    scotchWhisky: [
+      { name: "Chivas Regal 12", glass: "$10", bottle: "$100" },
+      { name: "Chivas Regal 18", glass: "$25", bottle: "$250" },
+      { name: "Red Label", glass: "$8", bottle: "$80" },
+      { name: "Black Label", glass: "$10", bottle: "$100" },
+      { name: "Double Black", glass: "$18", bottle: "$180" },
+      { name: "Blue Label", glass: "$90", bottle: "$900" },
+      { name: "Old Parr", glass: "$15", bottle: "$150" },
+      { name: "Dewars White", glass: "$8", bottle: null },
+      { name: "Dewars 12Y", glass: "$10", bottle: null }
+    ],
+    bourbonIrish: [
+      { name: "Jim Beam", glass: "$7", bottle: "$70" },
+      { name: "Jameson", glass: "$8", bottle: "$80" }
+    ],
+    maltWhisky: [
+      { name: "Glenfiddich", glass: "$12", bottle: "$120" },
+      { name: "The Macallan 12", glass: "$24", bottle: "$240" },
+      { name: "Monkey Shoulder", glass: "$12", bottle: "$120" }
+    ],
+    liqueurs: [
+      { name: "Goldschlager", glass: "$8", bottle: "$80" },
+      { name: "Jagermeister", glass: "$8", bottle: "$80" },
+      { name: "Baileys", glass: "$7", bottle: "$70" },
+      { name: "Sambuca White", glass: "$8", bottle: "$80" },
+      { name: "Sambuca Black", glass: "$8", bottle: "$80" }
+    ],
+    beer: [
+      { name: "Almaza", glass: "$5", bottle: null },
+      { name: "Almaza Light", glass: "$5", bottle: null },
+      { name: "Heineken", glass: "$7", bottle: null },
+      { name: "Add Mexican", glass: "+$1", bottle: null }
+    ],
+    rose: [
+      { name: "Ksara Sunset", glass: "$6", bottle: "$30" },
+      { name: "Cheval Noir Bordeaux", glass: "$15", bottle: null }
+    ],
+    whiteWine: [
+      { name: "Ksara Blanc de Blanc", glass: "$6", bottle: "$30" },
+      { name: "Ixir Altitude", glass: "$8", bottle: "$40" },
+      { name: "Ixir Grand Reserve", glass: "$15", bottle: "$50" },
+      { name: "Pinot Grigio", glass: "$11", bottle: "$55" },
+      { name: "Chablis", glass: null, bottle: "$100" }
+    ],
+    redWine: [
+      { name: "Ksara Reserve du Couvent", glass: "$6", bottle: "$30" },
+      { name: "Ksara Chateau 2019", glass: "$15", bottle: "$75" },
+      { name: "Ksara 3eme Millenaire", glass: "$15", bottle: "$75" },
+      { name: "Ixir Altitude", glass: "$10", bottle: "$50" },
+      { name: "Ixir Grand Reserve", glass: "$15", bottle: "$75" },
+      { name: "Chianti Red Piccini", glass: "$8", bottle: "$45" },
+      { name: "Etna Rosso", glass: null, bottle: "$85" }
+    ],
+    prosecco: [
+      { name: "Piccini Extra Dry White", glass: "$6", bottle: "$30" },
+      { name: "Venetian Dress", glass: null, bottle: "$50" }
+    ],
+    champagne: [
+      { name: "Laurent Perrier", glass: null, bottle: "$180" }
+    ],
+    pitchersAndCocktails: [
+      { name: "Gin Basil Pitcher", glass: "$25", bottle: null },
+      { name: "Sangria Pitcher", glass: "$25", bottle: null },
+      { name: "Avaii Speciality Drink", glass: "$15", bottle: null },
+      { name: "Jamaica Cocktail", glass: "$8", bottle: null },
+      { name: "Aperol Spritz", glass: "$9", bottle: null },
+      { name: "Amaretto Sour", glass: "$8", bottle: null },
+      { name: "Limoncello", glass: "$6", bottle: null }
+    ]
+  },
+  shisha: [
+    { name: "Teffehten", price: "$9" },
+    { name: "Hamod w Na3na3", price: "$9" },
+    { name: "3enab w Na3na3", price: "$9" },
+    { name: "3enab", price: "$9" },
+    { name: "3elke w Na3na3", price: "$9" },
+    { name: "Love Mix", price: "$9" }
+  ]
+};
+
+function renderMenuItemsGrid(containerId, items) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    html += '<div class="menu-item">';
+    html += '<div class="menu-item-header">';
+    html += '<div class="menu-item-name">' + item.name + '</div>';
+    html += '<div class="menu-item-price">' + item.price + '</div>';
+    html += '</div>';
+    if (item.desc) {
+      html += '<div class="menu-item-desc">' + item.desc + '</div>';
+    }
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderAlcoholGroup(container, title, items) {
+  var groupDiv = document.createElement('div');
+  groupDiv.className = 'alcohol-group';
+
+  var titleEl = document.createElement('div');
+  titleEl.className = 'alcohol-group-title';
+  titleEl.textContent = title;
+  groupDiv.appendChild(titleEl);
+
+  var grid = document.createElement('div');
+  grid.className = 'alc-items-grid';
+
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    var row = document.createElement('div');
+    row.className = 'alc-item';
+
+    var nameEl = document.createElement('div');
+    nameEl.className = 'alc-item-name';
+    nameEl.textContent = item.name;
+    row.appendChild(nameEl);
+
+    var pricesEl = document.createElement('div');
+    pricesEl.className = 'alc-item-prices';
+
+    if (item.glass) {
+      var gTag = document.createElement('div');
+      gTag.className = 'alc-price-tag';
+      gTag.innerHTML = '<span class="alc-type">Glass</span><span class="alc-val">' + item.glass + '</span>';
+      pricesEl.appendChild(gTag);
+    }
+    if (item.bottle) {
+      var bTag = document.createElement('div');
+      bTag.className = 'alc-price-tag';
+      bTag.innerHTML = '<span class="alc-type">Bottle</span><span class="alc-val">' + item.bottle + '</span>';
+      pricesEl.appendChild(bTag);
+    }
+
+    row.appendChild(pricesEl);
+    grid.appendChild(row);
+  }
+
+  groupDiv.appendChild(grid);
+  container.appendChild(groupDiv);
+}
+
+function renderShishaGrid(containerId, items) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    html += '<div class="shisha-item">';
+    html += '<span class="shisha-item-name">' + item.name + '</span>';
+    html += '<span class="shisha-item-price">' + item.price + '</span>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function initMenu() {
+  renderMenuItemsGrid('grid-appetizers', menuData.appetizers);
+  renderMenuItemsGrid('grid-salads', menuData.salads);
+  renderMenuItemsGrid('grid-mains', menuData.mains);
+  renderMenuItemsGrid('grid-pizza', menuData.pizza);
+  renderMenuItemsGrid('grid-pasta', menuData.pasta);
+  renderMenuItemsGrid('grid-burgers', menuData.burgers);
+  renderMenuItemsGrid('grid-breakfast', menuData.breakfast);
+  renderMenuItemsGrid('grid-dessert', menuData.dessert);
+  renderMenuItemsGrid('grid-kids', menuData.kids);
+  renderMenuItemsGrid('grid-cold-drinks', menuData.coldDrinks);
+  renderMenuItemsGrid('grid-hot-drinks', menuData.hotDrinks);
+  renderShishaGrid('grid-shisha', menuData.shisha);
+
+  var alcContainer = document.getElementById('grid-alcohol');
+  var alc = menuData.alcohol;
+  renderAlcoholGroup(alcContainer, 'Aperitifs', alc.aperitifs);
+  renderAlcoholGroup(alcContainer, 'Gin', alc.gin);
+  renderAlcoholGroup(alcContainer, 'Tequila', alc.tequila);
+  renderAlcoholGroup(alcContainer, 'Rum', alc.rum);
+  renderAlcoholGroup(alcContainer, 'Vodka', alc.vodka);
+  renderAlcoholGroup(alcContainer, 'Scotch Whisky', alc.scotchWhisky);
+  renderAlcoholGroup(alcContainer, 'Bourbon & Irish Whisky', alc.bourbonIrish);
+  renderAlcoholGroup(alcContainer, 'Malt Whisky', alc.maltWhisky);
+  renderAlcoholGroup(alcContainer, 'Liqueurs', alc.liqueurs);
+  renderAlcoholGroup(alcContainer, 'Beer', alc.beer);
+  renderAlcoholGroup(alcContainer, 'Rosé', alc.rose);
+  renderAlcoholGroup(alcContainer, 'White Wine', alc.whiteWine);
+  renderAlcoholGroup(alcContainer, 'Red Wine', alc.redWine);
+  renderAlcoholGroup(alcContainer, 'Prosecco', alc.prosecco);
+  renderAlcoholGroup(alcContainer, 'Champagne', alc.champagne);
+  renderAlcoholGroup(alcContainer, 'Pitchers & Cocktails', alc.pitchersAndCocktails);
+}
+
+// Category nav
+var catNav = document.getElementById('menuCatNav');
+catNav.addEventListener('click', function(e) {
+  var btn = e.target;
+  if (btn.classList.contains('cat-btn')) {
+    var cat = btn.getAttribute('data-cat');
+    var allBtns = catNav.querySelectorAll('.cat-btn');
+    for (var i = 0; i < allBtns.length; i++) {
+      allBtns[i].classList.remove('active');
+    }
+    btn.classList.add('active');
+
+    var sections = document.querySelectorAll('.menu-section');
+    for (var j = 0; j < sections.length; j++) {
+      sections[j].classList.remove('visible');
+    }
+
+    var map = {
+      'appetizers': 'appetizers',
+      'salads': 'salads',
+      'mains': 'mains',
+      'pizza': 'pizza',
+      'pasta': 'pasta',
+      'burgers': 'burgers',
+      'breakfast': 'breakfast',
+      'dessert': 'dessert',
+      'kids': 'kids',
+      'cold-drinks': 'cold-drinks',
+      'hot-drinks': 'hot-drinks',
+      'alcohol': 'alcohol',
+      'shisha': 'shisha'
+    };
+
+    var target = document.querySelector('[data-section="' + map[cat] + '"]');
+    if (target) {
+      target.classList.add('visible');
+      document.getElementById('menuContent').scrollTop = 0;
+      window.scrollTo(0, 0);
+    }
+  }
+});
+
+function showPage(name) {
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < pages.length; i++) {
+    pages[i].classList.remove('active');
+  }
+  document.getElementById('page-' + name).classList.add('active');
+
+  var navLinks = document.querySelectorAll('.nav-links a[id]');
+  for (var j = 0; j < navLinks.length; j++) {
+    navLinks[j].classList.remove('active');
+  }
+  var activeLink = document.getElementById('nav-' + name);
+  if (activeLink) activeLink.classList.add('active');
+
+  window.scrollTo(0, 0);
+}
+
+function toggleMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  if (menu.classList.contains('open')) {
+    menu.classList.remove('open');
+  } else {
+    menu.classList.add('open');
+  }
+}
+
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+function submitReservation() {
+  var name = document.getElementById('res-name').value.trim();
+  var phone = document.getElementById('res-phone').value.trim();
+  var date = document.getElementById('res-date').value;
+  var time = document.getElementById('res-time').value;
+  var guests = document.getElementById('res-guests').value;
+
+  if (!name || !phone || !date || !time || !guests) {
+    alert('Please fill in your name, phone, date, time, and number of guests.');
+    return;
+  }
+
+  document.getElementById('resFormWrap').style.display = 'none';
+  document.getElementById('resSuccess').style.display = 'block';
+}
+
+// Init
+var featuredPreviewTitles = document.querySelectorAll('.menu-preview-card h4');
+if (featuredPreviewTitles[1]) {
+  featuredPreviewTitles[1].textContent = 'Swiss Mushroom Burger';
+}
+
+initMenu();
+</script>
+</body>
+</html>
